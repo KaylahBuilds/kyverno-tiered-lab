@@ -24,6 +24,10 @@ run "private_entra_linux_plan" {
     error_message = "Use three actual Ubuntu2404 Linux nodes without public IPs."
   }
   assert {
+    condition     = azurerm_kubernetes_cluster.lab.node_provisioning_profile[0].mode == "Manual" && azurerm_kubernetes_cluster.lab.node_provisioning_profile[0].default_node_pools == "None"
+    error_message = "Keep explicitly managed VM node pools, not automatic node provisioning."
+  }
+  assert {
     condition     = azurerm_kubernetes_cluster.lab.network_profile[0].network_plugin_mode == "overlay" && azurerm_kubernetes_cluster.lab.network_profile[0].network_policy == "azure"
     error_message = "Preserve the documented Azure CNI overlay baseline."
   }

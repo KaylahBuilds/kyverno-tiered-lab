@@ -22,9 +22,20 @@ Consult the [Policy checks workflow](https://github.com/KaylahBuilds/kyverno-tie
 
 The expected failures are intentional test cases. A successful suite means the engine agreed with all expected pass/fail/skip outcomes.
 
-## Not executed by the default suite
+## Cloud validation and remaining limits
+
+### Cloud validation suite
+
+The AKS/EKS extension adds Terraform 1.9.8 schema validation and **16 mocked plan tests**: six for AKS, six for EKS and four for the Kyverno Helm add-on. Pins are AzureRM 5.9.0, AWS 6.68.0 and Helm provider 3.1.1. Provider initialization downloads public packages; mocked provider operations do not authenticate to a cloud or Kubernetes API.
+
+Four additional source checks cover platform settings, install pins, explicit context selection and configuration boundaries. Helm 3.22.0 renders checksum-pinned chart 3.9.1 / Kyverno v1.19.1 for both platforms using Kubernetes 1.33.0 API capabilities. The checks inspect actual controller images, replicas, placement, disruption budgets, feature flags, CRDs, internal services and the ConfigMap used to reconcile webhooks. They do **not** prove that live webhooks were reconciled or retained by AKS Admission Enforcer.
+
+Consult the [commit-specific workflow runs](https://github.com/KaylahBuilds/kyverno-tiered-lab/actions/workflows/checks.yml) for pass/fail results on the revision you review. Mock plans and Helm output do not replace the live cloud acceptance checklist.
+
+### Remaining live checks
 
 - Installing Kyverno or creating a Kubernetes cluster.
+- Real AWS/Azure plans/applies, identity authorization, regional Kubernetes availability, quotas, private API/DNS routing, node startup, upgrade, billing or infrastructure teardown.
 - Live admission, webhook timeout/outage recovery, controller auto-generation, or ephemeral-container subresource updates.
 - Background scans, report persistence, reporting configuration, or API-server defaulting.
 - Registry/image pulls or authenticated signature/attestation verification.

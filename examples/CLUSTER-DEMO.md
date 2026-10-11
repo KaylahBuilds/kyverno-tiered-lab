@@ -1,6 +1,6 @@
 # Optional disposable-cluster walkthrough
 
-This exercise observes Audit versus Deny through Kubernetes admission. It assumes you already have an isolated **disposable** cluster named `kind-kyverno-lab` in kubeconfig, with Kyverno **1.19.1**, its current ValidatingPolicy CRD, and healthy admission/reporting components. Review the [official installation and compatibility guidance](https://kyverno.io/docs/installation/installation/) when preparing that cluster. This repository does not install a controller or create credentials for you.
+This exercise observes Audit versus Deny through Kubernetes admission. It assumes you already have an isolated **disposable** cluster named `kind-kyverno-lab` in kubeconfig, with Kyverno **1.19.1**, its current ValidatingPolicy CRD, and healthy admission/reporting components. Review the [official installation and compatibility guidance](https://kyverno.io/docs/installation/installation/) when preparing that cluster. For optional AKS/EKS infrastructure and controller installation, use [the Terraform cloud guide](../cloud/README.md) first. Credentials stay outside Git.
 
 All commands below explicitly select the context; substitute only the name of your own disposable cluster. Never substitute a production context. Run from the repository root. These are manual, reviewable commands, not an automated deployment script.
 

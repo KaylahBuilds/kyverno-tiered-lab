@@ -66,6 +66,11 @@ resource "azurerm_kubernetes_cluster" "lab" {
     azure_rbac_enabled = true
   }
 
+  node_provisioning_profile {
+    mode               = "Manual"
+    default_node_pools = "None"
+  }
+
   default_node_pool {
     name                        = "linux"
     temporary_name_for_rotation = "linuxrotate"
