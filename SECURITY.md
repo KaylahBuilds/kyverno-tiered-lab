@@ -14,6 +14,12 @@ This is a public teaching repository containing synthetic fixtures. It is not a 
 
 ## Credentials and evidence
 
+The optional AKS/EKS Terraform roots create billable infrastructure. Private Kubernetes API endpoints require a privately connected workstation or runner; do not widen API exposure to accommodate CI. Plan against the explicit intended account/subscription, review supported regional Kubernetes versions and quotas, and apply manually only to an authorized disposable environment.
+
+Keep foundation and Helm add-on state separate. State and saved plans may contain sensitive values and must not enter Git. Local state is suitable only for isolated disposable work; shared use needs an encrypted remote backend with locking and least-privilege access, configured separately. The examples include no cloud credentials, kubeconfig contents, client secrets or private keys. CI has no cloud identity or deployment authority.
+
+Admission-controller replicas and system-namespace exclusions reduce particular risks; they do not prove availability or make arbitrary policies safe. Test webhook reachability, failure recovery, reporting and cleanup on each platform. Remove the exact lab policies and workloads before uninstalling Kyverno. Remove both labs before destroying a shared optional foundation. Foundation destruction removes dedicated networking and workers, not just the policy controller.
+
 Do not commit kubeconfigs, access tokens, private signing keys, cloud credentials, registry passwords, customer data, or raw production reports. Keep generated output under ignored `artifacts*/` directories and redact before sharing.
 
 If a credential leaks, revoke or rotate it; removing it from Git is not remediation. A signature-verification policy uses public trust material and identity constraints, not private signing credentials.

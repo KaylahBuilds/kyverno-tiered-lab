@@ -1,0 +1,10 @@
+# TEMPLATE ONLY: copy to ignored terraform.tfvars; replace every REPLACE_ value.
+cluster_name          = "REPLACE_unique-lab-name"
+subscription_id       = "REPLACE_subscription-uuid"
+tenant_id             = "REPLACE_entra-tenant-uuid"
+admin_group_object_id = "REPLACE_reviewed-entra-group-object-uuid"
+location              = "REPLACE_azure-region"
+kubernetes_version    = "REPLACE_supported-version"
+# Optional: check CIDR overlap and regional x86 VM capacity before planning.
+vnet_cidr    = "10.43.0.0/16"
+node_vm_size = "Standard_D4s_v5"

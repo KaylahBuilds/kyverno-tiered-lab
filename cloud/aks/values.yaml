@@ -1,0 +1,4 @@
+# Explicit despite the chart default, so an AKS requirement is reviewable here.
+config:
+  webhookAnnotations:
+    admissions.enforcer/disabled: "true"

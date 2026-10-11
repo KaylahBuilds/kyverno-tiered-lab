@@ -1,0 +1,11 @@
+# TEMPLATE ONLY: copy to ignored terraform.tfvars; replace every REPLACE_ value.
+cluster_name        = "REPLACE_unique-lab-name"
+region              = "REPLACE_aws-region"
+aws_account_id      = "REPLACE_target-account-id"
+admin_principal_arn = "REPLACE_existing-iam-role-arn"
+admin_ipv4_cidrs    = ["REPLACE_private-connected-runner-cidr"]
+availability_zones = ["REPLACE_first-az", "REPLACE_second-az"]
+kubernetes_version = "REPLACE_supported-minor-version"
+# Optional: check these against connected address space and regional capacity.
+vpc_cidr      = "10.42.0.0/16"
+instance_type = "m6i.xlarge"

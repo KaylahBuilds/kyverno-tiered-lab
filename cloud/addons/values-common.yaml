@@ -1,0 +1,75 @@
+# Kyverno chart 3.9.1 / application v1.19.1. A lab baseline, not a production SLO.
+global:
+  nodeSelector:
+    kubernetes.io/os: linux
+    security-lab: enabled
+config:
+  # This root owns its configuration. Do not preserve stale imperative edits.
+  preserve: false
+  excludeKyvernoNamespace: true
+  webhooks:
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          values:
+            - kube-system
+            - kube-public
+            - kube-node-lease
+            - kyverno
+features:
+  # Keep this lab on Kyverno's webhook evaluation path, not generated native VAPs.
+  generateValidatingAdmissionPolicy:
+    enabled: false
+  generateMutatingAdmissionPolicy:
+    enabled: false
+  policyExceptions:
+    enabled: false
+  forceFailurePolicyIgnore:
+    enabled: false
+  autoUpdateWebhooks:
+    enabled: true
+admissionController:
+  replicas: 3
+  hostNetwork: false
+  dnsPolicy: ClusterFirst
+  webhookServer:
+    port: 9443
+  service:
+    type: ClusterIP
+    port: 443
+  podAntiAffinity:
+    requiredDuringSchedulingIgnoredDuringExecution:
+      - labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: kyverno
+            app.kubernetes.io/component: admission-controller
+        topologyKey: kubernetes.io/hostname
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 2
+backgroundController:
+  replicas: 2
+  hostNetwork: false
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+cleanupController:
+  replicas: 2
+  hostNetwork: false
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+reportsController:
+  replicas: 2
+  hostNetwork: false
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+reportsServer:
+  enabled: false
+openreports:
+  enabled: false
+  installCrds: false
+grafana:
+  enabled: false

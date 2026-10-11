@@ -66,6 +66,16 @@ These five Python checks parse YAML and check fixture coverage, namespace scope,
 
 Do not recursively apply this repository. Test manifests are CLI inputs, negative fixtures are intentional, and the trust example is incomplete. Do not deploy these examples into production.
 
+## Azure AKS and Amazon EKS examples
+
+[The cloud guide](cloud/README.md) adds two practical paths: [Azure AKS](cloud/aks/README.md) and [Amazon EKS](cloud/eks/README.md). Each walks through the same Audit, Enforce, and Governance progression with explicit cluster selection and bounded namespaces.
+
+- Optional **Terraform foundations** create separate private-API sandbox clusters with real Linux workers. No shared cloud account or subscription is assumed.
+- A separate **Terraform Helm add-on** installs Kyverno with cloud-specific configuration, three admission-controller replicas, and node-placement settings.
+- Platform notes cover AKS Admission Enforcer, EKS webhook networking, protected system namespaces, ACR/ECR image-reference examples, recovery checks, and manual cleanup.
+
+Use an existing authorized disposable cluster, or create one with the appropriate foundation root. Private API access requires a connected workstation or runner. Cloud resources are billable; no cluster is created by CI. Mocked Terraform tests and native Helm renders validate configuration, not live admission, IAM, networking, or image signatures.
+
 ## The failure modes matter
 
 - **Audit versus Deny:** `validationActions: [Audit]` records a violation; `[Deny]` rejects a matching violating admission request.
@@ -78,7 +88,7 @@ Tier 1 uses `failurePolicy: Ignore` for its visibility exercise; Tiers 2 and 3 u
 
 ## What CI can do
 
-The active workflow downloads the checksum-pinned CLI, runs native tests, and runs the structural checks. It has `contents: read`, does not persist checkout credentials, and grants no OIDC or deployment authority. Actions use full commit pins.
+The active workflow downloads the checksum-pinned CLI, runs native tests and structural checks, validates the three Terraform roots with mocked providers, and renders the AKS/EKS Helm configurations. It has `contents: read`, does not persist checkout credentials, and grants no OIDC or deployment authority. Actions use full commit pins.
 
 The [image-trust example](examples/image-trust.yaml.example) is an inactive `.yaml.example` file outside the workflow directory. It requires an exact trusted signing identity, issuer, and repository scope. It is a signature-verification starting point, **not a completed provenance policy** and not exercised by the default tests.
 
@@ -89,6 +99,7 @@ tier-1-audit/          Audit policy, fixtures, native test manifest, walkthrough
 tier-2-enforce/        Pod hardening policy, fixtures, native test manifest
 tier-3-governance/     Owner/image-reference policy, tests, exception lifecycle
 examples/             Scoped namespace manifest, cluster demo, inactive trust template
+cloud/                AKS/EKS guides, Terraform foundations/add-on, render checks
 scripts/              Verified local CLI installer
 tests/                Structural repository guardrails
 .github/workflows/    Read-only native test CI

@@ -1,0 +1,4 @@
+# Standard EC2 managed nodes and AWS VPC CNI. No host-network workaround.
+admissionController:
+  hostNetwork: false
+  dnsPolicy: ClusterFirst
