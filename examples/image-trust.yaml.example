@@ -1,0 +1,53 @@
+# INACTIVE AND UNVALIDATED: complete the REQUIRED trust inputs before review.
+# Signature verification skeleton only; this is not a provenance policy.
+# Do not rename or apply until the Tier 3 integration checklist is complete.
+apiVersion: policies.kyverno.io/v1
+kind: ImageValidatingPolicy
+metadata:
+  name: kyverno-lab-image-trust
+spec:
+  validationActions: [Deny]
+  failurePolicy: Fail
+  evaluation:
+    admission:
+      enabled: true
+    background:
+      enabled: false
+  autogen:
+    podControllers:
+      controllers: []
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [pods, pods/ephemeralcontainers]
+  matchConditions:
+    - name: lab-namespace-only
+      expression: "object.metadata.namespace == 'kyverno-lab-tier3'"
+  matchImageReferences:
+    # REQUIRED: replace with a reviewed exact registry/repository glob.
+    # Pair this with a separate allowlist policy so nonmatching images cannot bypass trust.
+    - glob: "REQUIRED_REGISTRY/REQUIRED_REPOSITORY@sha256:*"
+  validationConfigurations:
+    mutateDigest: false
+    verifyDigest: true
+    required: true
+  attestors:
+    - name: approvedBuilder
+      cosign:
+        keyless:
+          identities:
+            # REQUIRED: exact signing workflow identity and OIDC issuer.
+            # No wildcard workflow identities or issuer regular expressions.
+            - subject: "REQUIRED_EXACT_SIGNING_WORKFLOW_SUBJECT"
+              issuer: "REQUIRED_EXACT_OIDC_ISSUER"
+        ctlog:
+          url: "https://rekor.sigstore.dev"
+          insecureIgnoreTlog: false
+          insecureIgnoreSCT: false
+  validations:
+    - expression: >-
+        images.containers.map(image,
+          verifyImageSignatures(image, [attestors.approvedBuilder])).all(count, count > 0)
+      message: "Every matched image must have a verified signature from the approved identity."

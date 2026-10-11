@@ -1,0 +1,80 @@
+apiVersion: cli.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: tier-2-enforce
+policies:
+  - policy.yaml
+resources:
+  - fixtures/hardened.yaml
+  - fixtures/privileged.yaml
+  - fixtures/root-user.yaml
+  - fixtures/missing-security-context.yaml
+  - fixtures/host-network.yaml
+  - fixtures/host-path.yaml
+  - fixtures/writable-root.yaml
+  - fixtures/added-capability.yaml
+  - fixtures/unconfined-seccomp.yaml
+  - fixtures/unsafe-init.yaml
+  - fixtures/unsafe-ephemeral.yaml
+  - fixtures/outside-scope.yaml
+results:
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [hardened]
+    result: pass
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [privileged]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [root-user]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [missing-security-context]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [host-network]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [host-path]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [writable-root]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [added-capability]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [unconfined-seccomp]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [unsafe-init]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [unsafe-ephemeral]
+    result: fail
+  - policy: kyverno-lab-pod-security
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [outside-scope]
+    result: skip

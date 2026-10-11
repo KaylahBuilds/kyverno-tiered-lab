@@ -1,0 +1,68 @@
+apiVersion: cli.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: tier-3-governance
+policies:
+  - policy.yaml
+resources:
+  - fixtures/approved.yaml
+  - fixtures/unapproved-team.yaml
+  - fixtures/missing-team.yaml
+  - fixtures/mutable-tag.yaml
+  - fixtures/wrong-registry.yaml
+  - fixtures/registry-lookalike.yaml
+  - fixtures/short-digest.yaml
+  - fixtures/unapproved-prefix.yaml
+  - fixtures/unsafe-init-image.yaml
+  - fixtures/outside-scope.yaml
+results:
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [approved]
+    result: pass
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [unapproved-team]
+    result: fail
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [missing-team]
+    result: fail
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [mutable-tag]
+    result: fail
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [wrong-registry]
+    result: fail
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [registry-lookalike]
+    result: fail
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [short-digest]
+    result: fail
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [unapproved-prefix]
+    result: fail
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [unsafe-init-image]
+    result: fail
+  - policy: kyverno-lab-approved-images
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [outside-scope]
+    result: skip

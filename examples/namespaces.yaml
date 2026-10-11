@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kyverno-lab-tier1
+  labels:
+    app.kubernetes.io/part-of: kyverno-tiered-lab
+    pod-security.kubernetes.io/enforce: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kyverno-lab-tier2
+  labels:
+    app.kubernetes.io/part-of: kyverno-tiered-lab
+    pod-security.kubernetes.io/enforce: restricted
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kyverno-lab-tier3
+  labels:
+    app.kubernetes.io/part-of: kyverno-tiered-lab
+    pod-security.kubernetes.io/enforce: restricted

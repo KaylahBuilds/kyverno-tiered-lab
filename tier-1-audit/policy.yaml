@@ -1,0 +1,32 @@
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
+metadata:
+  name: kyverno-lab-team-audit
+  labels:
+    app.kubernetes.io/part-of: kyverno-tiered-lab
+spec:
+  validationActions: [Audit]
+  failurePolicy: Ignore
+  evaluation:
+    admission:
+      enabled: true
+    background:
+      enabled: true
+  autogen:
+    podControllers:
+      controllers: []
+  matchConstraints:
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [pods, pods/ephemeralcontainers]
+  matchConditions:
+    - name: lab-namespace-only
+      expression: "object.metadata.namespace == 'kyverno-lab-tier1'"
+  validations:
+    - expression: >-
+        has(object.metadata.labels) &&
+        'team' in object.metadata.labels &&
+        object.metadata.labels['team'].size() > 0
+      message: "Add a nonempty team label so a policy finding has an owner."

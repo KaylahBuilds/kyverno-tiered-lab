@@ -1,0 +1,32 @@
+apiVersion: cli.kyverno.io/v1alpha1
+kind: Test
+metadata:
+  name: tier-1-audit
+policies:
+  - policy.yaml
+resources:
+  - fixtures/has-team.yaml
+  - fixtures/missing-team.yaml
+  - fixtures/empty-team.yaml
+  - fixtures/outside-scope.yaml
+results:
+  - policy: kyverno-lab-team-audit
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [has-team]
+    result: pass
+  - policy: kyverno-lab-team-audit
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [missing-team]
+    result: fail
+  - policy: kyverno-lab-team-audit
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [empty-team]
+    result: fail
+  - policy: kyverno-lab-team-audit
+    isValidatingPolicy: true
+    kind: Pod
+    resources: [outside-scope]
+    result: skip

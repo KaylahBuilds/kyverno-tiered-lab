@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: empty-team
+  namespace: kyverno-lab-tier1
+  labels:
+    team: ""
+spec:
+  automountServiceAccountToken: false
+  restartPolicy: Never
+  # Prevent scheduling even if this fixture is accidentally created.
+  nodeSelector:
+    kyverno-tiered-lab.invalid/never-schedule: "true"
+  containers:
+    - name: app
+      image: registry.k8s.io/pause:3.10
+      resources:
+        requests:
+          cpu: 10m
+          memory: 16Mi
+        limits:
+          cpu: 100m
+          memory: 32Mi
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 65532
+        privileged: false
+        allowPrivilegeEscalation: false
+        readOnlyRootFilesystem: true
+        capabilities:
+          drop: [ALL]
+        seccompProfile:
+          type: RuntimeDefault
